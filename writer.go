@@ -26,7 +26,7 @@ func (w *Writer) next() int {
 }
 
 func (w *Writer) write(b byte) error {
-	w.buf[w.filled%len(w.buf)] = b
+	w.buf[w.next()] = b
 	w.filled++
 	if w.filled < len(w.buf) {
 		return nil
@@ -41,6 +41,16 @@ func (w *Writer) write(b byte) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func (w *Writer) Flush() error {
+	if w.filled > 0 {
+		if _, err := w.underlying.Write(w.buf[:w.filled]); err != nil {
+			return err
+		}
+	}
+	w.filled = 0
 	return nil
 }
 
