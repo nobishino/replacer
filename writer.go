@@ -1,13 +1,16 @@
 package replacer
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 type Writer struct {
 	underlying io.Writer // the Writer to which replaced byte stream is written
-	buf        []byte    // internal buffer for matching
-	filled     int       // buf[x] == 0 の時にそれが書き込みされていないのか0が書き込まれたのかを区別するためのindex
-	old        []byte
-	new        []byte
+	buf        []byte    // internal ring buffer for matching
+	filled     int       // number of bytes filled in buf.
+	old        []byte    // byte sequence to be replaced
+	new        []byte    // byte sequence to replace
 }
 
 func (w *Writer) Write(p []byte) (n int, err error) {
@@ -55,9 +58,10 @@ func (w *Writer) Flush() error {
 }
 
 // 最後に書き込まれたbyteを末尾とする部分列がoldと一致するかどうかを返す
+// w.filled < len(w.buf)の場合は呼び出してはいけない(panicする)
 func (w *Writer) match() bool {
 	if w.filled < len(w.buf) {
-		return false
+		panic(fmt.Sprintf("match should not be called when filled < len(buf). but filled = %d, len(buf) = %d", w.filled, len(w.buf)))
 	}
 	for i := 0; i < len(w.buf); i++ {
 		ii := (w.head() + i) % len(w.buf)
