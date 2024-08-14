@@ -16,7 +16,7 @@ var tests = []struct {
 	{"foo", "bar", "foo", "bar"},
 	{"foo", "bar", "ffoo", "fbar"},
 	{"foo", "bar", "ffoofooo", "fbarbaro"},
-	// {"f", "b", "ffoo", "bboo"},
+	{"f", "b", "ffoo", "bboo"},
 }
 
 func TestWriter(t *testing.T) {
@@ -44,7 +44,7 @@ func TestWriterIsEquivalentToBytesReplace(t *testing.T) {
 		n   int
 	}
 	tests := []test{
-		// {"hello", "l", "L", 0},
+		{"hello", "l", "L", 0},
 		{"hello", "l", "L", -1},
 		// {"hello", "x", "X", -1},
 		// {"", "x", "X", -1},
