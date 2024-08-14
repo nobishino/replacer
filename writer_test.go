@@ -65,7 +65,7 @@ func TestWriterIsEquivalentToBytesReplace(t *testing.T) {
 		// {"☺☻☹", "", "<>", -1},
 	}
 	title := func(tc test) string {
-		return fmt.Sprintf("Replace(%q, %q, %q, %d)", tc.in, tc.old, tc.new, tc.n)
+		return fmt.Sprintf("(%q,%q,%q,%d)", tc.in, tc.old, tc.new, tc.n)
 	}
 	for _, tc := range tests {
 		t.Run(title(tc), func(t *testing.T) {

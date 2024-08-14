@@ -12,6 +12,7 @@ type Writer struct {
 	old        []byte    // byte sequence to be replaced
 	new        []byte    // byte sequence to replace
 	n          int
+	written    int
 }
 
 func (w *Writer) Write(p []byte) (n int, err error) {
@@ -49,12 +50,11 @@ func (w *Writer) write(b byte) error {
 }
 
 func (w *Writer) Flush() error {
-	if w.filled > 0 {
+	if w.filled < len(w.buf) {
 		if _, err := w.underlying.Write(w.buf[:w.filled]); err != nil {
 			return err
 		}
 	}
-	w.filled = 0
 	return nil
 }
 
