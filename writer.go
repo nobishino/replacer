@@ -11,6 +11,7 @@ type Writer struct {
 	filled     int       // number of bytes filled in buf.
 	old        []byte    // byte sequence to be replaced
 	new        []byte    // byte sequence to replace
+	n          int
 }
 
 func (w *Writer) Write(p []byte) (n int, err error) {
@@ -77,13 +78,14 @@ func (w *Writer) head() int {
 	return w.next()
 }
 
-func NewWriter(w io.Writer, old, new []byte) *Writer {
+func NewWriter(w io.Writer, old, new []byte, n int) *Writer {
 	buf := make([]byte, len(old))
 	return &Writer{
 		underlying: w,
 		buf:        buf,
 		old:        []byte(old),
 		new:        []byte(new),
+		n:          n,
 	}
 }
 
