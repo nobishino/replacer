@@ -12,7 +12,6 @@ type Writer struct {
 	old        []byte    // byte sequence to be replaced
 	new        []byte    // byte sequence to replace
 	n          int
-	written    int
 }
 
 func (w *Writer) Write(p []byte) (n int, err error) {
@@ -30,14 +29,19 @@ func (w *Writer) next() int {
 	return w.filled % len(w.buf)
 }
 
+func (w *Writer) shouldReplace() bool {
+	return w.n != 0
+}
+
 func (w *Writer) write(b byte) error {
 	w.buf[w.next()] = b
 	w.filled++
-	if w.filled < len(w.buf) {
+	if w.filled < len(w.buf) { // まだマッチするかどうか判断できない
 		return nil
 	}
-	if w.match() {
+	if w.match() && w.shouldReplace() {
 		w.filled = 0
+		w.n--
 		if _, err := w.underlying.Write(w.new); err != nil {
 			return err
 		}
