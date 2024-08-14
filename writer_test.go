@@ -46,7 +46,7 @@ func TestWriterIsEquivalentToBytesReplace(t *testing.T) {
 	tests := []test{
 		{"hello", "l", "L", 0},
 		{"hello", "l", "L", -1},
-		// {"hello", "x", "X", -1},
+		{"hello", "x", "X", -1},
 		// {"", "x", "X", -1},
 		// {"radar", "r", "<r>", -1},
 		// {"", "", "<>", -1},
